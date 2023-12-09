@@ -1,37 +1,76 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import gsap from "gsap";
+import GUI from "lil-gui";
 
+const gui = new GUI();
 const raycaster = new THREE.Raycaster();
 let currentIntersect = null,
-  previousIntersect = null,
-  thirdTry = null,
   pressedButton = null;
 
-const axesHelper = new THREE.AxesHelper(20);
 const marimi = {
   width: window.innerWidth,
   height: window.innerHeight,
+  cameraPerspective: 32,
+  aspectRatio: window.innerWidth / window.innerHeight,
+  viewSize: 10,
 };
 const canvas = document.querySelector("canvas.webgl");
 const scene = new THREE.Scene();
-scene.add(axesHelper);
-const camera = new THREE.PerspectiveCamera(
-  75,
-  marimi.width / marimi.height,
+
+const camera = new THREE.OrthographicCamera(
+  (-marimi.aspectRatio * marimi.viewSize) / 2,
+  (marimi.aspectRatio * marimi.viewSize) / 2,
+  marimi.viewSize / 2,
+  -marimi.viewSize / 2,
   0.1,
   100
 );
-camera.position.y = 6.5;
-camera.lookAt(0, 0, 0);
-camera.position.set(5, 6.5, 4);
+camera.position.set(6.8, 6.3, 5.5);
+camera.rotation.set(4.9, 6.5, 0);
+
+// camera.lookAt(camera.position.x, 0, 0);
+gui.add(camera.rotation, "x", -12, 12, 0.001);
+gui.add(camera.rotation, "y", -12, 12, 0.001);
+gui.add(camera.rotation, "z", -1, 1, 0.0001);
+
+gui.add(camera.position, "x", -12, 12, 0.001);
+gui.add(camera.position, "y", -12, 12, 0.001);
+gui.add(camera.position, "z", 5.5, 30, 0.001);
+
+console.log(scene.rotation);
+// camera.rotation.y = Math.PI / 20;
+// camera.position.z = 8;
+// camera.position.x = 8;
 
 scene.add(camera);
 
 /**
  * Objects
  */
+// masa
+const plane = new THREE.Mesh(
+  new THREE.PlaneGeometry(32, 32),
+  new THREE.MeshStandardMaterial({ color: "blue" })
+);
+plane.position.set(5, -0.4, 2);
+plane.rotation.x = -Math.PI / 2;
+scene.add(plane);
+
+// post
 const buttonWidth = 1.5;
+
+const post = new THREE.Mesh(
+  new THREE.BoxGeometry(buttonWidth * 4, 1, 6),
+  new THREE.MeshStandardMaterial({ color: "white" })
+);
+const post2 = post.clone();
+const post3 = post.clone();
+const post4 = post.clone();
+post.position.set(2.25, -0.5, 4);
+post2.position.set(9, -0.5, 4);
+post3.position.set(2.25, -0.5, 11);
+post4.position.set(9, -0.5, 11);
+scene.add(post, post2, post3, post4);
 
 const button = new THREE.Mesh(
   new THREE.BoxGeometry(buttonWidth, 1, 0.5),
@@ -48,14 +87,15 @@ for (let i = 0; i < 8; i++) {
   buttons.push(button1);
   scene.add(button1);
 }
+// buttons[0].rotation.z = Math.PI / 8;
 
 /**
  * Lights
  */
-const light1 = new THREE.PointLight("white", 80);
-light1.position.y = 5;
-light1.position.z = 5;
-light1.position.x = 2;
+const light1 = new THREE.PointLight("white", 100);
+light1.position.y = 10;
+light1.position.z = 0;
+light1.position.x = 5;
 scene.add(light1);
 const light2 = new THREE.AmbientLight("white", 0.5);
 light2.position.y = -10;
@@ -88,7 +128,7 @@ window.addEventListener("mousemove", (event) => {
   // console.log(mouse);
 });
 
-const renderer = new THREE.WebGLRenderer({ canvas });
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setSize(marimi.width, marimi.height);
 renderer.render(scene, camera);
 
@@ -104,7 +144,7 @@ window.addEventListener("click", () => {
     });
     pressedButton &&
       gsap.to(pressedButton.object.position, {
-        duration: 0.5,
+        duration: 0.4,
         y: 0,
         ease: "elastic.out(1.5,1)",
       });
@@ -117,37 +157,9 @@ const tick = () => {
 
   const intersects = raycaster.intersectObjects(buttons);
 
-  // for (const intersect of intersects) {
-  //   intersect.object.material.color.set("#0000ff");
-  // }
-
   if (intersects.length) {
-    if (!currentIntersect) {
-      // console.log("mouse enter");
-    }
-    if (currentIntersect) {
-      // currentIntersect.object.material.color.set("white");
-      // pressedButton &&
-      //   pressedButton.object.position !== currentIntersect.object.position &&
-      //   (currentIntersect.object.position.y = 0);
-    }
-    // console.log(currentIntersect);
-    thirdTry = currentIntersect;
     currentIntersect = intersects[0];
-    // pressedButton &&
-    // currentIntersect.object.material.color.set("#0000ff");
-    // pressedButton &&
-    // pressedButton.object.position !== currentIntersect.object.position &&
-    // (currentIntersect.object.position.y = -0.05);
   } else {
-    if (currentIntersect) {
-      // console.log("mouse leave");
-      // currentIntersect.object.material.color.set("white");
-      // pressedButton &&
-      //   pressedButton.object.position !== currentIntersect.object.position &&
-      //   (currentIntersect.object.position.y = 0);
-    }
-
     currentIntersect = null;
   }
 
