@@ -29,13 +29,13 @@ camera.position.set(6.8, 6.3, 5.5);
 camera.rotation.set(4.9, 6.5, 0);
 
 // camera.lookAt(camera.position.x, 0, 0);
-gui.add(camera.rotation, "x", -12, 12, 0.001);
-gui.add(camera.rotation, "y", -12, 12, 0.001);
-gui.add(camera.rotation, "z", -1, 1, 0.0001);
+// gui.add(camera.rotation, "x", -12, 12, 0.001);
+// gui.add(camera.rotation, "y", -12, 12, 0.001);
+// gui.add(camera.rotation, "z", -1, 1, 0.0001);
 
-gui.add(camera.position, "x", -12, 12, 0.001);
-gui.add(camera.position, "y", -12, 12, 0.001);
-gui.add(camera.position, "z", 5.5, 30, 0.001);
+// gui.add(camera.position, "x", -12, 12, 0.001);
+// gui.add(camera.position, "y", -12, 12, 0.001);
+gui.add(camera.position, "z", 5.5, 30, 0.001).name("scroll");
 
 console.log(scene.rotation);
 // camera.rotation.y = Math.PI / 20;
