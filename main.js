@@ -35,7 +35,7 @@ gui.add(camera.rotation, "z", -1, 1, 0.0001);
 
 gui.add(camera.position, "x", -12, 12, 0.001);
 gui.add(camera.position, "y", -12, 12, 0.001);
-gui.add(camera.position, "z", -12, 12, 0.001);
+gui.add(camera.position, "z", 5.5, 30, 0.001);
 
 console.log(scene.rotation);
 // camera.rotation.y = Math.PI / 20;
@@ -49,7 +49,7 @@ scene.add(camera);
  */
 // masa
 const plane = new THREE.Mesh(
-  new THREE.PlaneGeometry(32, 16),
+  new THREE.PlaneGeometry(32, 32),
   new THREE.MeshStandardMaterial({ color: "blue" })
 );
 plane.position.set(5, -0.4, 2);
@@ -58,12 +58,19 @@ scene.add(plane);
 
 // post
 const buttonWidth = 1.5;
+
 const post = new THREE.Mesh(
   new THREE.BoxGeometry(buttonWidth * 4, 1, 6),
   new THREE.MeshStandardMaterial({ color: "white" })
 );
+const post2 = post.clone();
+const post3 = post.clone();
+const post4 = post.clone();
 post.position.set(2.25, -0.5, 4);
-scene.add(post);
+post2.position.set(9, -0.5, 4);
+post3.position.set(2.25, -0.5, 11);
+post4.position.set(9, -0.5, 11);
+scene.add(post, post2, post3, post4);
 
 const button = new THREE.Mesh(
   new THREE.BoxGeometry(buttonWidth, 1, 0.5),
