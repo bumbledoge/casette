@@ -15,7 +15,7 @@ const marimi = {
 };
 const canvas = document.querySelector("canvas.webgl");
 const scene = new THREE.Scene();
-scene.add(axesHelper);
+// scene.add(axesHelper);
 const camera = new THREE.PerspectiveCamera(
   75,
   marimi.width / marimi.height,
@@ -117,37 +117,10 @@ const tick = () => {
 
   const intersects = raycaster.intersectObjects(buttons);
 
-  // for (const intersect of intersects) {
-  //   intersect.object.material.color.set("#0000ff");
-  // }
-
   if (intersects.length) {
-    if (!currentIntersect) {
-      // console.log("mouse enter");
-    }
-    if (currentIntersect) {
-      // currentIntersect.object.material.color.set("white");
-      // pressedButton &&
-      //   pressedButton.object.position !== currentIntersect.object.position &&
-      //   (currentIntersect.object.position.y = 0);
-    }
-    // console.log(currentIntersect);
     thirdTry = currentIntersect;
     currentIntersect = intersects[0];
-    // pressedButton &&
-    // currentIntersect.object.material.color.set("#0000ff");
-    // pressedButton &&
-    // pressedButton.object.position !== currentIntersect.object.position &&
-    // (currentIntersect.object.position.y = -0.05);
   } else {
-    if (currentIntersect) {
-      // console.log("mouse leave");
-      // currentIntersect.object.material.color.set("white");
-      // pressedButton &&
-      //   pressedButton.object.position !== currentIntersect.object.position &&
-      //   (currentIntersect.object.position.y = 0);
-    }
-
     currentIntersect = null;
   }
 
