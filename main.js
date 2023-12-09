@@ -49,7 +49,7 @@ scene.add(camera);
  */
 // masa
 const plane = new THREE.Mesh(
-  new THREE.PlaneGeometry(16, 16),
+  new THREE.PlaneGeometry(32, 16),
   new THREE.MeshStandardMaterial({ color: "blue" })
 );
 plane.position.set(5, -0.4, 2);
@@ -85,10 +85,10 @@ for (let i = 0; i < 8; i++) {
 /**
  * Lights
  */
-const light1 = new THREE.PointLight("white", 80);
-light1.position.y = 5;
+const light1 = new THREE.PointLight("white", 100);
+light1.position.y = 10;
 light1.position.z = 0;
-light1.position.x = 2;
+light1.position.x = 5;
 scene.add(light1);
 const light2 = new THREE.AmbientLight("white", 0.5);
 light2.position.y = -10;
