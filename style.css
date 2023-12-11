@@ -4,8 +4,8 @@ body {
   overflow: hidden;
   background-color: black;
 
-  display: flex;
-  justify-content: center;
+  /* display: flex;
+  justify-content: center; */
 }
 .homeButton {
   position: absolute;
@@ -15,11 +15,4 @@ body {
 
   width: 160px;
   text-align: center;
-  /* white-space: nowrap; */
 }
-/* .homeButton0 {
-  position: absolute;
-  top: 36px;
-  left: 145px;
-  font-size: 25px;
-} */
