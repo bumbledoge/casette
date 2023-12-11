@@ -5,7 +5,8 @@ import GUI from "lil-gui";
 const gui = new GUI();
 const raycaster = new THREE.Raycaster();
 let currentIntersect = null,
-  pressedButton = null;
+  pressedButtonNr = null,
+  currentIntersectNr = null;
 
 const marimi = {
   width: window.innerWidth,
@@ -37,7 +38,7 @@ camera.rotation.set(4.9, 6.5, 0);
 // gui.add(camera.position, "y", -12, 12, 0.001);
 gui.add(camera.position, "z", 5.5, 30, 0.001).name("scroll");
 
-console.log(scene.rotation);
+// console.log(scene.rotation);
 // camera.rotation.y = Math.PI / 20;
 // camera.position.z = 8;
 // camera.position.x = 8;
@@ -135,20 +136,38 @@ renderer.render(scene, camera);
 // const controls = new OrbitControls(camera, renderer.domElement);
 // controls.update();
 
+const textsButtons = [...document.querySelectorAll(".homeButton")];
+textsButtons.forEach((el, i) => {
+  el.style.left = 145 + i * 170 + "px";
+  el.style.top = 36 + "px";
+});
 window.addEventListener("click", () => {
-  if (currentIntersect) {
-    gsap.to(currentIntersect.object.position, {
+  if (buttons[currentIntersectNr]) {
+    gsap.to(buttons[currentIntersectNr].position, {
       duration: 0.5,
       y: -0.5,
       ease: "elastic.out(1.5,1)",
     });
-    pressedButton &&
-      gsap.to(pressedButton.object.position, {
+    gsap.to(textsButtons[currentIntersectNr], {
+      duration: 0.5,
+      top: textsButtons[currentIntersectNr].offsetTop - 12,
+      left: textsButtons[currentIntersectNr].offsetLeft + 15,
+      ease: "elastic.out(1.5,1)",
+    });
+    if (pressedButtonNr !== null) {
+      gsap.to(buttons[pressedButtonNr].position, {
         duration: 0.4,
         y: 0,
         ease: "elastic.out(1.5,1)",
       });
-    pressedButton = currentIntersect;
+      gsap.to(textsButtons[pressedButtonNr], {
+        duration: 0.5,
+        top: textsButtons[pressedButtonNr].offsetTop - 39,
+        left: textsButtons[pressedButtonNr].offsetLeft - 15,
+        ease: "elastic.out(1.5,1)",
+      });
+    }
+    pressedButtonNr = currentIntersectNr;
   }
 });
 
@@ -159,8 +178,14 @@ const tick = () => {
 
   if (intersects.length) {
     currentIntersect = intersects[0];
+    buttons.forEach((el, i) => {
+      if (currentIntersect.object.uuid === el.uuid) {
+        currentIntersectNr = i;
+      }
+    });
   } else {
     currentIntersect = null;
+    currentIntersectNr = null;
   }
 
   requestAnimationFrame(tick);
