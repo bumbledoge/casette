@@ -9,12 +9,13 @@ let currentIntersect = null,
   currentIntersectNr = null;
 
 const marimi = {
-  width: window.innerWidth,
-  height: window.innerHeight,
-  cameraPerspective: 32,
-  aspectRatio: window.innerWidth / window.innerHeight,
+  width: 1500,
+  height: 1100,
+  cameraPerspective: 1500 / 1100,
+  aspectRatio: 1500 / 1100,
   viewSize: 10,
 };
+console.log(marimi.width, marimi.height);
 const canvas = document.querySelector("canvas.webgl");
 const scene = new THREE.Scene();
 
@@ -106,19 +107,32 @@ scene.add(light2);
 /**
  * Renders and animation
  */
-window.addEventListener("resize", () => {
-  // Update sizes
-  marimi.width = window.innerWidth;
-  marimi.height = window.innerHeight;
+// const body = document.querySelector("body");
+// let bodySize = canvas.offsetLeft;
+// window.addEventListener("resize", () => {
+//   console.log("pair: ", canvas.offsetLeft, bodySize);
+//   if (canvas.offsetLeft > bodySize) {
+//     textsButtons.forEach((el, i) => {
+//       el.style.left = el.offsetLeft + canvas.offsetLeft + "px";
+//     });
+//   } else {
+//     textsButtons.forEach((el, i) => {
+//       el.style.left = el.offsetLeft + canvas.offsetLeft + "px";
+//     });
+//   }
+//   bodySize = canvas.offsetLeft;
+//   // // Update sizes
+//   // marimi.width = window.innerWidth;
+//   // marimi.height = window.innerHeight;
 
-  // Update camera
-  camera.aspect = marimi.width / marimi.height;
-  camera.updateProjectionMatrix();
+//   // // Update camera
+//   // camera.aspect = marimi.width / marimi.height;
+//   // camera.updateProjectionMatrix();
 
-  // Update renderer
-  renderer.setSize(marimi.width, marimi.height);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-});
+//   // // Update renderer
+//   // renderer.setSize(marimi.width, marimi.height);
+//   // renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+// });
 
 const mouse = new THREE.Vector2();
 
@@ -138,8 +152,13 @@ renderer.render(scene, camera);
 
 const textsButtons = [...document.querySelectorAll(".homeButton")];
 textsButtons.forEach((el, i) => {
-  el.style.left = 145 + i * 170 + "px";
-  el.style.top = 36 + "px";
+  const buttonPos = buttons[i].position.clone();
+  buttonPos.project(camera);
+
+  const translateX = (buttonPos.x + 1) * 0.5 * marimi.width - 85; // 85 - point is not exactly in center
+  const translateY = buttonPos.y * 0.5 * 84;
+  textsButtons[i].style.left = translateX + "px";
+  textsButtons[i].style.top = translateY + "px";
 });
 window.addEventListener("click", () => {
   if (buttons[currentIntersectNr]) {

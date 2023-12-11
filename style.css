@@ -2,16 +2,24 @@ html,
 body {
   margin: 0;
   overflow: hidden;
+  background-color: black;
+
+  display: flex;
+  justify-content: center;
 }
 .homeButton {
   position: absolute;
   font-size: 25px;
+  pointer-events: none;
+  transform: rotate3d(1, 0, 0, 30deg);
+
+  width: 160px;
+  text-align: center;
+  /* white-space: nowrap; */
 }
-.homeButton0 {
+/* .homeButton0 {
   position: absolute;
   top: 36px;
   left: 145px;
   font-size: 25px;
-
-  transform: rotate3d(1, 0, 0, 30deg);
-}
+} */
