@@ -17,16 +17,22 @@ const marimi = {
 const canvas = document.querySelector("canvas.webgl");
 const scene = new THREE.Scene();
 
-const camera = new THREE.OrthographicCamera(
-  (-marimi.aspectRatio * marimi.viewSize) / 2,
-  (marimi.aspectRatio * marimi.viewSize) / 2,
-  marimi.viewSize / 2,
-  -marimi.viewSize / 2,
-  0.1,
-  100
-);
-camera.position.set(6.8, 6.3, 5.5);
-camera.rotation.set(4.9, 6.5, 0);
+const camera = new THREE.PerspectiveCamera(50, marimi.aspectRatio, 0.1, 100);
+camera.position.y = 10;
+camera.position.x = 5;
+camera.position.z = 0;
+camera.rotation.x = -Math.PI / 2;
+
+// const camera = new THREE.OrthographicCamera(
+//   (-marimi.aspectRatio * marimi.viewSize) / 2,
+//   (marimi.aspectRatio * marimi.viewSize) / 2,
+//   marimi.viewSize / 2,
+//   -marimi.viewSize / 2,
+//   0.1,
+//   100
+// );
+// camera.position.set(6.8, 6.3, 5.5);
+// camera.rotation.set(4.9, 6.5, 0);
 
 // camera.lookAt(camera.position.x, 0, 0);
 // gui.add(camera.rotation, "x", -12, 12, 0.001);
@@ -35,7 +41,7 @@ camera.rotation.set(4.9, 6.5, 0);
 
 // gui.add(camera.position, "x", -12, 12, 0.001);
 // gui.add(camera.position, "y", -12, 12, 0.001);
-gui.add(camera.position, "z", 5.5, 30, 0.001).name("scroll");
+gui.add(camera.position, "z", 0, 30, 0.001).name("scroll");
 
 console.log(scene.rotation);
 // camera.rotation.y = Math.PI / 20;
