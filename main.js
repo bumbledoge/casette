@@ -1,7 +1,9 @@
 import * as THREE from "three";
 import gsap from "gsap";
 import GUI from "lil-gui";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
+const loader = new GLTFLoader();
 const gui = new GUI();
 const raycaster = new THREE.Raycaster();
 let currentIntersect = null,
@@ -61,9 +63,16 @@ scene.add(plane);
 // post
 const buttonWidth = 1.5;
 
+const textureLoader = new THREE.TextureLoader();
+let shadowTexture = textureLoader.load("/textures/simpleShadow.jpg");
+shadowTexture.colorSpace = THREE.SRGBColorSpace;
+console.log(shadowTexture);
+
 const post = new THREE.Mesh(
   new THREE.BoxGeometry(buttonWidth * 4, 1, 6),
-  new THREE.MeshStandardMaterial({ color: "white" })
+  new THREE.MeshStandardMaterial({
+    color: "white",
+  })
 );
 const post2 = post.clone();
 const post3 = post.clone();
@@ -72,7 +81,12 @@ post.position.set(2.25, -0.5, 4);
 post2.position.set(9, -0.5, 4);
 post3.position.set(2.25, -0.5, 11);
 post4.position.set(9, -0.5, 11);
-scene.add(post, post2, post3, post4);
+// post.receiveShadow = true;
+// post2.receiveShadow = true;
+// post3.receiveShadow = true;
+// post4.receiveShadow = true;
+
+scene.add(post, post2);
 
 const button = new THREE.Mesh(
   new THREE.BoxGeometry(buttonWidth, 1, 0.5),
@@ -89,21 +103,46 @@ for (let i = 0; i < 8; i++) {
   buttons.push(button1);
   scene.add(button1);
 }
-// buttons[0].rotation.z = Math.PI / 8;
+
+let vespa = undefined;
+loader.load("/vespa.glb", (gltf) => {
+  vespa = gltf.scene;
+  vespa.position.set(...post.position);
+  vespa.scale.setScalar(2);
+  vespa.position.y += 1;
+  vespa.position.z += 1;
+  vespa.position.x -= 1;
+  vespa.rotation.z = 0;
+  vespa.rotation.y = -2.1;
+  vespa.rotation.x = -1;
+  vespa.castShadow = true;
+  scene.add(vespa);
+});
 
 /**
  * Lights
  */
-const light1 = new THREE.PointLight("white", 100);
-light1.position.y = 10;
-light1.position.z = 0;
-light1.position.x = 5;
+const light1 = new THREE.PointLight("white", 20);
+light1.position.y = 5;
+light1.position.z = 5;
+light1.position.x = 10;
 scene.add(light1);
-const light2 = new THREE.AmbientLight("white", 0.5);
+
+const light2 = new THREE.AmbientLight("white", 1);
 light2.position.y = -10;
 light2.position.z = -10;
-scene.add(light2);
+// scene.add(light2);
 
+const light3 = new THREE.PointLight("white", 200);
+light3.position.y = 7.7;
+light3.position.z = 5;
+light3.position.x = 4;
+light3.castShadow = true;
+scene.add(light3);
+
+gui.add(light3.position, "x", -10, 10, 0.001);
+gui.add(light3.position, "y", -10, 10, 0.001);
+gui.add(light3.position, "z", -10, 10, 0.001);
 /**
  * Renders and animation
  */
@@ -145,6 +184,7 @@ window.addEventListener("mousemove", (event) => {
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setSize(marimi.width, marimi.height);
+renderer.shadowMap.enabled = true;
 renderer.render(scene, camera);
 
 // const controls = new OrbitControls(camera, renderer.domElement);
@@ -190,9 +230,18 @@ window.addEventListener("click", () => {
   }
 });
 
+const clock = new THREE.Clock();
+let currentTime,
+  deltaTime,
+  previousTime = clock.getElapsedTime();
 const tick = () => {
-  raycaster.setFromCamera(mouse, camera);
+  currentTime = clock.getElapsedTime();
+  deltaTime = previousTime - currentTime;
 
+  vespa && (vespa.rotation.x = Math.sin(currentTime) * 0.15 - 1.2);
+  vespa && (vespa.rotation.y = Math.cos(currentTime) * 0.15 - 2);
+
+  raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(buttons);
 
   if (intersects.length) {
@@ -207,6 +256,7 @@ const tick = () => {
     currentIntersectNr = null;
   }
 
+  previousTime = currentTime;
   requestAnimationFrame(tick);
   renderer.render(scene, camera);
 };
